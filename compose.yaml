@@ -1,0 +1,31 @@
+services:
+  web:
+    image: receipt-room:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      API_BASE_URL: http://api:8000
+      PORT: 80
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+  api:
+    image: receipt-ocr-api:local
+    build:
+      context: ../receipt-ocr
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+
+  receipt-ocr:
+    image: receipt-ocr-api:local
+    profiles:
+      - batch
+    working_dir: /workspace
+    entrypoint: ["python"]
+    command: ["/app/receipt_scanner.py"]
+    volumes:
+      - ../receipt-ocr:/workspace

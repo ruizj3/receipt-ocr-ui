@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: receipt-room
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - key: API_BASE_URL
+        sync: false
+      - key: NGINX_ENVSUBST_FILTER
+        value: '^(API_BASE_URL|PORT)$'
